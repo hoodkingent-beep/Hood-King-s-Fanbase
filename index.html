@@ -1,0 +1,231 @@
+<!doctype html>
+
+<script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260807-05-4dc3575","C":{"Abril Fatface":"YACgEZbkUVE,0","Alfa Slab One":"YACgEYS9sJU,0","Anton":"YACgEcYqQ-A,0","Archivo":"YAHO2-t-jNE,0","Arial":"YAGyDvJ_4Ts,0","Bebas Neue":"YACgESME5ew,0","Bricolage Grotesque":"YAFyMcdwzpc,0","Canva Sans":"YAFLd8sKbwc,2","Caveat":"YALBs2ploWQ,0","Comic Sans MS":"YAHO2VMiyZo,0","Cormorant Garamond":"YAFdJhX-538,0","Courier New":"YAGzXiGs0_8,0","DM Sans":"YAD1aU3sLnI,0","DM Serif Display":"YAD1aYG82rc,0","Forum":"YACgEcnnqB4,0","Fraunces":"YAEul-FRQw4,0","Georgia":"YAGzXkO0pEM,0","Helvetica Neue":"YAFcf6CtJfI,0","Impact":"YAFcfnjI7Vk,0","Inter":"YAFdJvSyp_k,3","Iowan Old Style":"YAGNIFa8j9o,0","Jacques Francois":"YAHO2a5g66Q,0","JetBrains Mono":"YAFdJksXcAk,0","Libre Baskerville":"YACgEUFdPdA,0","Manrope":"YAHO2b2feC4,0","Merriweather":"YACgEXvHxxs,0","Montserrat":"YADLjI9qxTA,0","Nunito":"YACgEX8C5Gg,0","Oleo Script":"YACgEQQ14jI,0","Phantom Sans":"YAHO2E8Pb88,0","Playfair Display":"YACgEYmuCJE,0","Poppins":"YAFdJjbTu24,1","Press Start 2P":"YAFyGr-8pmQ,0","Quicksand":"YADWjpfPmdk,0","Raleway":"YACgEVg3xZg,0","Segoe UI":"YAHNdRD1Klw,0","Source Sans 3":"YAG4lO1Mj10,0","Spectral":"YAHO2rVUHIM,0","Times New Roman":"YAGzXW3gftg,0","Times":"YAGzXW3gftg,0","Ubuntu":"YACgERDU--Q,0","Work Sans":"YAGXhLOKv44,0","Yellowtail":"YACgEYG4kG4,0","ui-monospace":"YADlN8CFZ8Q,0","ui-sans-serif":"YACkoN-xg4g,0"}}');</script><script src="/_sdk/7949ff62d67710d5.telemetry_sdk.js" integrity="sha512-KIvXA82Di44YY/RH9/63A9MuTuavYgDFG8PfErJn7Wli4K0LAOk+coo/aPXk3+ZNL96nHh9VYD4PE+fLes+laQ=="></script> <title>Hood King Community</title> <script src="https://cdn.tailwindcss.com/3.4.17"></script> <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.46.2/dist/umd/supabase.js"></script> <script src="/_sdk/04cc6185e046f597.resizing_sdk.js" type="text/javascript" integrity="sha512-CiE/G92aQF0nxneFg1kdOvXih8sQ1Z2a2QI3+r/WvzJwQqH6+IyB3iL07OkJmpm3ABAaf07+FnqWny98f5sR6w=="></script> <style> :root { --red: #dc143c; --ink: #000000; --panel: #0a0a0a; --muted: #b7b7b7; }
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Raleway", sans-serif;
+  background: #000;
+}
+
+.app-shell {
+  width: 100%;
+  min-height: calc(100 * min(var(--vh, 1vh), 1vh));
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+.app-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .08;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .15) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, black, transparent 72%);
+}
+
+.gold-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #ffffff, transparent);
+}
+
+.hero-image-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,.97) 2%, rgba(0,0,0,.62) 50%, rgba(0,0,0,.14) 100%);
+}
+
+.hero-image-wrap img {
+  filter: saturate(.95) contrast(1.15) brightness(.86);
+}
+
+.benefit-card {
+  transition: transform .28s ease, border-color .28s ease, background .28s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(220, 20, 60, .7);
+  background: #141414;
+}
+
+.reveal { animation: reveal .7s both cubic-bezier(.2,.8,.2,1); }
+.reveal-2 { animation: reveal .7s .13s both cubic-bezier(.2,.8,.2,1); }
+.reveal-3 { animation: reveal .7s .24s both cubic-bezier(.2,.8,.2,1); }
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #ff4466;
+  outline-offset: 3px;
+}
+
+.form-field {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,.3);
+  background: #0f0f0f;
+  color: #fff;
+  font-family: "DM Sans", sans-serif;
+  transition: border-color .2s ease, background .2s ease;
+}
+
+.form-field:hover {
+  border-color: rgba(255,255,255,.55);
+  background: #151515;
+}
+
+.form-status {
+  min-height: 22px;
+  margin: 0;
+  font-family: "DM Sans", sans-serif;
+}
+
+.status-error { color: #ff8a9f; }
+.status-loading { color: #d6d6d6; }
+</style> <script src="/_sdk/0e8d3a91e1c6f495.data_sdk.js" type="text/javascript" integrity="sha512-c00oDoGjsMgluCLLEyVl3suwEkgjOGGplVFbsilUoBg4aMKNmsL3mwsc9r0dPn95qiSZyjBousQXgROkAW7p/w=="></script>
+Hood King Claim your place
+Hood King Entertainment logo featuring a streetwear character and bold white lettering
+Built for the ones setting the pace.
+
+The inner circle
+
+Hood King Community
+Your direct line to rare drops, real stories, and the people moving culture forward. Join the list. Stay ahead of the noise.
+
+Private updates · Zero filler · All access
+
+Your name
+Your email address
+What are you into? (optional)
+Join now Saving
+You're on the list.
+Welcome to the inner circle. Keep an eye on your inbox for your first Hood King update.
+
+Membership has its privileges
+
+What hits your inbox
+Exclusive drops
+First word on limited releases, special offers, and rare finds.
+
+Behind the scenes
+The untold process, people, and energy behind every move.
+
+Early access
+Get there before the crowd when something worth having lands.
+
+Member announcements
+Private news and community moments, delivered with intention.
+
+Hood King Community — access with intention.
+
+<script src="/_sdk/571d88ca352bbccf.editing_sdk.js" integrity="sha512-jpVzCgOJfgU8ETK2cVi9ukdjrZIqXjCspYqy9afx1TyeJ4jZxisBmh2SIlonXgbaxCv9M5yrk3WY4wZKWDC3Ig=="></script> <script> /* Add your project details before publishing. Use the public anonymous key from your Supabase project settings. */ const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co"; const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+document.addEventListener("DOMContentLoaded", () => {
+  lucide.createIcons();
+
+  const form = document.getElementById("signup-form");
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+  const interestsInput = document.getElementById("interests");
+  const button = document.getElementById("join-button");
+  const defaultLabel = document.getElementById("join-default-label");
+  const loadingLabel = document.getElementById("join-loading-label");
+  const joinIcon = document.getElementById("join-icon");
+  const message = document.getElementById("form-message");
+  const success = document.getElementById("signup-success");
+
+  let supabaseClient = null;
+
+  function showMessage(text, type) {
+    message.textContent = text;
+    message.className = "form-status " + (type === "error" ? "status-error" : "status-loading");
+  }
+
+  function clearMessage() {
+    message.textContent = "";
+    message.className = "form-status";
+  }
+
+  function setLoading(isLoading) {
+    button.disabled = isLoading;
+    defaultLabel.classList.toggle("hidden", isLoading);
+    loadingLabel.classList.toggle("hidden", !isLoading);
+    joinIcon.classList.toggle("hidden", isLoading);
+  }
+
+  function hasSupabaseCredentials() {
+    return (
+      SUPABASE_URL &&
+      SUPABASE_ANON_KEY &&
+      !SUPABASE_URL.includes("YOUR_PROJECT") &&
+      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE")
+    );
+  }
+
+  if (hasSupabaseCredentials() && window.supabase) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearMessage();
+
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const interests = interestsInput.value.trim();
+
+    if (!name) {
+      showMessage("Enter your name to claim your place.", "error");
+      nameInput.focus();
+      return;
+    }
+
+    if (!email || !emailInput.validity.valid) {
+      showMessage("Enter a valid email address to join.", "error");
+      emailInput.focus();
+      return;
+    }
+
+    if (!supabaseClient) {
+      showMessage("Signups are not connected yet. Add your Supabase project URL and anonymous key to activate the list.", "error");
+      return;
+    }
+
+    setLoading(true);
+    showMessage("Saving your place in the inner circle...", "loading");
+
+    const { error } = await supabaseClient
+      .from("fans")
+      .insert({
+        name: name,
+        email: email,
+        interests: interests || null
+      });
+
+    if (error) {
+      showMessage("Your spot was not saved. Please check your details and try again.", "error");
+      setLoading(false);
+      return;
+    }
+
+    form.classList.add("hidden");
+    success.classList.remove("hidden");
+  });
+});
+</script>
