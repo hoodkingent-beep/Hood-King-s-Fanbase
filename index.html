@@ -73,8 +73,8 @@
     document.addEventListener("DOMContentLoaded", () => {
       lucide.createIcons();
 
-      const SUPABASE_URL = sb_publishable_F0rlPMeBVTK639hjA8YmLQ_hOFJNr7d;
-      const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
+      const SUPABASE_URL = "sb_publishable_F0rlPMeBVTK639hjA8YmLQ_hOFJNr7d";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wenplbG1sbmd4anRoaHBneHd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5NDc3OTYsImV4cCI6MjEwMTUyMzc5Nn0.F7GGMgDmfbIH2D_PJpq9z6jPGAPJRpy1-m0vHxKzZLs";
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
       const form = document.getElementById("signup-form");
