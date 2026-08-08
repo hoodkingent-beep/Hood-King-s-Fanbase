@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showMessage("Saving your place in the inner circle...", "loading");
 
     const { error } = await supabaseClient
-      .from("fans")
+      .from("FanBase")
       .insert({
         name: name,
         email: email,
