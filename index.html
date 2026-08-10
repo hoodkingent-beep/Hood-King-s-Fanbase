@@ -36,13 +36,13 @@
         <div class="mt-8">
           <form id="signup-form" class="space-y-3" novalidate>
             <label class="block text-xs font-bold uppercase tracking-[0.15em]" for="name">Your name</label>
-            <input id="name" type="text" autocomplete="name" required
+            <input id="name" name="name" type="text" autocomplete="name" required
               class="min-w-0 w-full border border-white/30 bg-black/50 px-4 py-4 text-sm text-white placeholder:text-white/40"
               placeholder="Your name" style="background:#0f0f0f;">
 
             <label class="block text-xs font-bold uppercase tracking-[0.15em]" for="email">Your email address</label>
             <div class="flex flex-col gap-3 sm:flex-row">
-              <input id="email" type="email" autocomplete="email" required
+              <input id="email" name="email" type="email" autocomplete="email" required
                 class="min-w-0 flex-1 border border-white/30 bg-black/50 px-4 py-4 text-sm text-white placeholder:text-white/40"
                 placeholder="name@email.com" style="background:#0f0f0f;">
               <button id="join-button"
