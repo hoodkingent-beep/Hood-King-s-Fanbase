@@ -45,11 +45,12 @@
               <input id="email" name="email" type="email" autocomplete="email" required
                 class="min-w-0 flex-1 border border-white/30 bg-black/50 px-4 py-4 text-sm text-white placeholder:text-white/40"
                 placeholder="name@email.com" style="background:#0f0f0f;">
+
               <button id="join-button"
                 class="inline-flex min-h-[52px] items-center justify-center gap-2 px-6 py-3 text-sm font-extrabold uppercase tracking-[0.12em] transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60"
                 type="submit" style="background:#dc143c; color:#000;">
                 <span class="button-label">Join now</span>
-                <i data-lucide="arrow-up-right" style="width:17px;height:17px"></i>
+                <i data-lucide="arrow-up-right" aria-label="Submit" style="width:17px;height:17px"></i>
               </button>
             </div>
 
@@ -58,7 +59,7 @@
 
           <div id="signup-success" class="hidden border border-white/30 bg-white/5 p-5 mt-4" aria-live="polite">
             <div class="flex gap-3">
-              <i data-lucide="badge-check" class="mt-0.5 shrink-0 text-white" style="width:22px;height:22px"></i>
+              <i data-lucide="badge-check" aria-label="Success" class="mt-0.5 shrink-0 text-white" style="width:22px;height:22px"></i>
               <div>
                 <h2 class="font-bold text-xl">You're on the list.</h2>
                 <p class="mt-1 leading-relaxed text-white/70">Welcome to the inner circle.</p>
@@ -85,6 +86,13 @@
       const message = document.getElementById("form-message");
       const success = document.getElementById("signup-success");
 
+      // Guard: if any element is missing, show a clear message
+      if (!form || !nameInput || !emailInput || !button || !message || !success) {
+        console.error("Missing form element(s). Check IDs: signup-form, name, email, join-button, form-message, signup-success.");
+        if (message) message.textContent = "Setup error: form elements not found. Check your HTML IDs.";
+        return;
+      }
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
@@ -95,7 +103,7 @@
         if (!email || !emailInput.validity.valid) { message.textContent = "Enter a valid email address."; emailInput.focus(); return; }
 
         button.disabled = true;
-        button.querySelector(".button-label").textContent = "Saving";
+        button.querySelector(".button-label").textContent = "Saving...";
         message.textContent = "";
 
         const { error } = await supabase
@@ -103,11 +111,20 @@
           .insert([{ name, email }]);
 
         if (error) {
-          message.textContent = error.code === "23505" ? "That email is already on the list." : "Your spot wasn't saved. Please try again.";
+          console.error("Supabase insert error:", error);
+          message.textContent =
+            error.code === "23505"
+              ? "That email is already on the list."
+              : (error.message || "Your spot wasn't saved. Please try again.");
+
           button.disabled = false;
           button.querySelector(".button-label").textContent = "Join now";
           return;
         }
+
+        // Optional: clear inputs
+        nameInput.value = "";
+        emailInput.value = "";
 
         form.classList.add("hidden");
         success.classList.remove("hidden");
