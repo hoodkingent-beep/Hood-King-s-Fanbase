@@ -87,11 +87,19 @@
       const success = document.getElementById("signup-success");
 
       // Guard: if any element is missing, show a clear message
-      if (!form || !nameInput || !emailInput || !button || !message || !success) {
-        console.error("Missing form element(s). Check IDs: signup-form, name, email, join-button, form-message, signup-success.");
-        if (message) message.textContent = "Setup error: form elements not found. Check your HTML IDs.";
-        return;
-      }
+      if (!form || !nameInput || !emailInput || !button || !message || !success)const missing = [];
+if (!form) missing.push("signup-form");
+if (!nameInput) missing.push("name");
+if (!emailInput) missing.push("email");
+if (!button) missing.push("join-button");
+if (!message) missing.push("form-message");
+if (!success) missing.push("signup-success");
+
+if (missing.length) {
+  console.error("Missing element IDs:", missing.join(", "));
+  if (message) message.textContent = "Setup error: missing " + missing.join(", ");
+  return;
+}
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
