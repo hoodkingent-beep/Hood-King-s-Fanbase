@@ -117,16 +117,20 @@ if (missing.length) {
 
         const { data, error } = await supabase
         .from("FanBase")
-        .insert([{ name, email }]);
+        .insert([{ name, email }])
+        .select();
       
-      console.log("INSERT RESULT:", { data, error });
-      
-      if (error) {
-        message.textContent = error.message || "Your spot wasn't saved. Please try again.";
+        if (error) {
+        console.log("Supabase error:", error);
+        message.textContent = `Error: ${error.message} (code: ${error.code || "n/a"})`;
         button.disabled = false;
         button.querySelector(".button-label").textContent = "Join now";
         return;
       }
+
+message.textContent = "Saved!";
+console.log("Inserted row:", data);
+
         // Optional: clear inputs
         nameInput.value = "";
         emailInput.value = "";
