@@ -1,158 +1,302 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hood King Community</title>
 
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="browser.png">
 
   <style>
-    :root { --red: #dc143c; --ink: #000000; --panel: #0a0a0a; }
+    :root {
+      --red: #dc143c;
+      --ink: #000000;
+      --panel: #0a0a0a;
+      --muted: #b7b7b7;
+    }
+
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: "Raleway", sans-serif; background:#000; }
-    .app-shell { width: 100%; min-height: 100vh; position: relative; overflow: hidden; background: #000; color:#fff; }
-    .gold-line { background: linear-gradient(90deg, transparent, #ffffff, transparent); height: 1px; }
-    input:focus, select:focus { outline: 2px solid #dc143c; outline-offset: 2px; }
+
+    body {
+      margin: 0;
+      font-family: "Raleway", sans-serif;
+      background: #000;
+    }
+
+    .app-shell {
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .08;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, .15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .15) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black, transparent 72%);
+    }
+
+    .accent-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #ffffff, transparent);
+    }
+
+    .hero-image-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,.97) 2%, rgba(0,0,0,.62) 50%, rgba(0,0,0,.14) 100%);
+    }
+
+    .hero-image-wrap img {
+      filter: saturate(.95) contrast(1.15) brightness(.86);
+    }
+
+    .benefit-card {
+      transition: transform .28s ease, border-color .28s ease, background .28s ease;
+    }
+
+    .benefit-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(220, 20, 60, .7);
+      background: #141414;
+    }
+
+    .reveal { animation: reveal .7s both cubic-bezier(.2,.8,.2,1); }
+    .reveal-2 { animation: reveal .7s .13s both cubic-bezier(.2,.8,.2,1); }
+    .reveal-3 { animation: reveal .7s .24s both cubic-bezier(.2,.8,.2,1); }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: 2px solid var(--red);
+      outline-offset: 2px;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid #ff4466;
+      outline-offset: 3px;
+    }
+
+    .form-field {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.3);
+      background: #0f0f0f;
+      color: #fff;
+      font-family: "DM Sans", sans-serif;
+      transition: border-color .2s ease, background .2s ease;
+    }
+
+    .form-field:hover {
+      border-color: rgba(255,255,255,.55);
+      background: #151515;
+    }
+
+    .form-status {
+      min-height: 22px;
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
+    }
+
+    .status-error { color: #ff8a9f; }
+    .status-loading { color: #d6d6d6; }
   </style>
 </head>
 
-<body>
-  <div class="app-shell">
-    <main class="w-full px-5 pb-10 pt-10 sm:px-8 lg:px-12">
-      <section class="mx-auto max-w-2xl overflow-hidden border border-white/10 bg-[#000000] p-8 shadow-2xl shadow-black/40">
-        <img src="logo.png" alt="Hood King Entertainment logo" class="mx-auto w-48 h-auto">
+<body style="background:#000;">
+  <div class="app-shell text-white">
+    <header class="relative z-10 w-full px-5 pt-5 sm:px-8 lg:px-12">
+      <nav class="mx-auto flex max-w-6xl items-center justify-between border-b border-white/10 pb-4" aria-label="Main navigation">
+        <a href="#join" class="flex items-center gap-2.5 no-underline">
+          <span class="flex h-9 w-9 items-center justify-center border border-white/40 text-white" aria-hidden="true">
+            <i data-lucide="crown" style="width:18px;height:18px"></i>
+          </span>
+          <span class="text-sm font-extrabold uppercase tracking-[0.18em]" style="color:#fff;font-weight:800;font-size:16px;">Hood King</span>
+        </a>
+        <a class="text-xs font-bold uppercase tracking-[0.16em] no-underline transition hover:brightness-125"
+           href="#join" style="color:#dc143c;font-weight:700;font-size:16px;">Claim your place</a>
+      </nav>
+    </header>
 
-        <p class="mb-3 text-xs font-bold uppercase tracking-[0.23em]" style="color:#dc143c;">The inner circle</p>
-        <h1 class="text-4xl font-extrabold uppercase leading-[.93] tracking-[-0.045em]">Hood King Community</h1>
-        <div class="gold-line my-6 w-24"></div>
-        <p class="leading-relaxed text-white/70">
-          Your direct line to rare drops, real stories, and the people moving culture forward.
-        </p>
+    <main class="relative z-10 w-full px-5 pb-10 pt-8 sm:px-8 lg:px-12">
+      <section class="mx-auto max-w-6xl overflow-hidden border border-white/10 bg-black shadow-2xl shadow-black/40">
+        <div class="grid min-h-[560px] lg:grid-cols-[1.05fr_.95fr]">
+          <div class="relative order-2 min-h-[310px] lg:order-1 lg:min-h-full">
+            <div class="hero-image-wrap absolute inset-0">
+              <!-- Replace hero.png with your real file in the repo -->
+              <img class="h-full w-full object-cover" loading="lazy" src="hero.png"
+                   alt="Hood King Entertainment hero image">
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 z-10 p-6 sm:p-8 lg:p-10">
+              <div class="accent-line mb-4 w-20"></div>
+              <p class="max-w-xs text-xs font-medium uppercase tracking-[0.16em] text-white/70" style="font-size:16px;">
+                Built for the ones setting the pace.
+              </p>
+            </div>
+          </div>
 
-        <div class="mt-8">
-          <form id="signup-form" class="space-y-3" novalidate>
-            <label class="block text-xs font-bold uppercase tracking-[0.15em]" for="name">Your name</label>
-            <input id="name" name="name" type="text" autocomplete="name" required
-              class="min-w-0 w-full border border-white/30 bg-black/50 px-4 py-4 text-sm text-white placeholder:text-white/40"
-              placeholder="Your name" style="background:#0f0f0f;">
+          <div id="join" class="order-1 flex flex-col justify-center p-7 sm:p-10 lg:order-2 lg:p-14">
+            <div class="reveal">
+              <p class="mb-5 text-xs font-bold uppercase tracking-[0.23em]" style="color:#dc143c;font-weight:700;font-size:16px;">
+                The inner circle
+              </p>
+              <h1 class="max-w-xl font-extrabold uppercase leading-[.93] tracking-[-0.045em]"
+                  style="color:#fff;font-weight:800;font-size:52px;line-height:.93;">
+                Hood King Community
+              </h1>
+              <div class="accent-line my-7 w-24"></div>
+            </div>
 
-            <label class="block text-xs font-bold uppercase tracking-[0.15em]" for="email">Your email address</label>
-            <input id="email" name="email" type="email" autocomplete="email" required
-              class="min-w-0 w-full border border-white/30 bg-black/50 px-4 py-4 text-sm text-white placeholder:text-white/40"
-              placeholder="name@email.com" style="background:#0f0f0f;">
+            <p class="reveal-2 max-w-lg leading-relaxed text-white/70" style="color:#e0e0e0;font-size:18px;line-height:1.55;">
+              Your direct line to rare drops, real stories, and the people moving culture forward. Join the list. Stay ahead of the noise.
+            </p>
 
-            <label class="block text-xs font-bold uppercase tracking-[0.15em]" for="phone">Phone (optional)</label>
-            <input id="phone" name="phone" type="tel" autocomplete="tel"
-              class="min-w-0 w-full border border-white/30 bg-black/50 px-4 py-4 text-sm text-white placeholder:text-white/40"
-              placeholder="(614) 555-1234" style="background:#0f0f0f;">
+            <p class="reveal-2 mt-5 text-xs font-semibold uppercase tracking-[0.12em]" style="color:#dc143c;font-weight:700;font-size:16px;">
+              Private updates · Zero filler · All access
+            </p>
 
-            <label class="block text-xs font-bold uppercase tracking-[0.15em]" for="interests">What are you here for?</label>
-            <select id="interests" name="interests"
-              class="min-w-0 w-full border border-white/30 bg-black/50 px-4 py-4 text-sm text-white"
-              style="background:#0f0f0f;">
-              <option value="" selected>Choose one (optional)</option>
-              <option value="music-drops">Music drops</option>
-              <option value="events-shows">Events & shows</option>
-              <option value="merch">Merch</option>
-              <option value="behind-the-scenes">Behind the scenes</option>
-              <option value="artist-updates">Artist updates</option>
-            </select>
+            <div class="reveal-3 mt-8">
+              <form id="signup-form" class="space-y-4" novalidate>
+                <div>
+                  <label class="mb-2 block text-xs font-bold uppercase tracking-[0.15em]" for="name" style="font-size:16px;">
+                    Your name
+                  </label>
+                  <input id="name" name="name" class="form-field px-4 py-4 text-sm placeholder:text-white/40"
+                         type="text" autocomplete="name" required placeholder="First and last name" style="font-size:16px;">
+                </div>
 
-            <label class="flex items-start gap-3 text-sm text-white/70">
-              <input id="consent" name="consent" type="checkbox" required class="mt-1">
-              <span>I agree to receive updates from Hood King Entertainment.</span>
-            </label>
+                <div>
+                  <label class="mb-2 block text-xs font-bold uppercase tracking-[0.15em]" for="email" style="font-size:16px;">
+                    Your email address
+                  </label>
+                  <input id="email" name="email" class="form-field px-4 py-4 text-sm placeholder:text-white/40"
+                         type="email" autocomplete="email" required placeholder="name@email.com" style="font-size:16px;">
+                </div>
 
-            <button id="join-button"
-              class="inline-flex w-full min-h-[52px] items-center justify-center gap-2 px-6 py-3 text-sm font-extrabold uppercase tracking-[0.12em] transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60"
-              type="submit" style="background:#dc143c; color:#000;">
-              <span class="button-label">Join now</span>
-              <i data-lucide="arrow-up-right" aria-label="Submit" style="width:17px;height:17px"></i>
-            </button>
+                <div>
+                  <label class="mb-2 block text-xs font-bold uppercase tracking-[0.15em]" for="phone" style="font-size:16px;">
+                    Phone (optional)
+                  </label>
+                  <input id="phone" name="phone" class="form-field px-4 py-4 text-sm placeholder:text-white/40"
+                         type="tel" autocomplete="tel" placeholder="(614) 555-1234" style="font-size:16px;">
+                </div>
 
-            <p id="form-message" class="min-h-[20px] text-sm" aria-live="polite"></p>
-          </form>
+                <div>
+                  <label class="mb-2 block text-xs font-bold uppercase tracking-[0.15em]" for="interests" style="font-size:16px;">
+                    What are you into? (optional)
+                  </label>
+                  <input id="interests" name="interests" class="form-field px-4 py-4 text-sm placeholder:text-white/40"
+                         type="text" autocomplete="off" placeholder="Drops, events, music, culture..." style="font-size:16px;">
+                </div>
 
-          <div id="signup-success" class="hidden border border-white/30 bg-white/5 p-5 mt-4" aria-live="polite">
-            <div class="flex gap-3">
-              <i data-lucide="badge-check" aria-label="Success" class="mt-0.5 shrink-0 text-white" style="width:22px;height:22px"></i>
-              <div>
-                <h2 class="font-bold text-xl">You're on the list.</h2>
-                <p class="mt-1 leading-relaxed text-white/70">Welcome to the inner circle. Redirecting…</p>
-              </div>
+                <div class="pt-1">
+                  <label class="flex items-start gap-3 text-sm text-white/70" style="font-family:'DM Sans',sans-serif;">
+                    <input id="consent" name="consent" type="checkbox" required class="mt-1">
+                    <span>I agree to receive updates from Hood King Entertainment.</span>
+                  </label>
+                </div>
+
+                <button id="join-button"
+                        class="inline-flex min-h-[54px] w-full items-center justify-center gap-2 px-6 py-3 text-sm font-extrabold uppercase tracking-[0.12em] transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60"
+                        type="submit" style="background:#dc143c;color:#000;font-weight:800;">
+                  <span id="join-default-label" style="font-size:16px;">Join now</span>
+                  <span id="join-loading-label" class="hidden" style="font-size:16px;">Saving</span>
+                  <i id="join-icon" data-lucide="arrow-up-right" style="width:17px;height:17px"></i>
+                </button>
+
+                <p id="form-message" class="form-status" aria-live="polite"></p>
+              </form>
+
+              <section id="signup-success" class="hidden border border-white/30 bg-white/5 p-5" aria-live="polite" aria-labelledby="success-heading">
+                <div class="flex gap-3">
+                  <i data-lucide="badge-check" class="mt-0.5 shrink-0 text-white" style="width:22px;height:22px" aria-hidden="true"></i>
+                  <div>
+                    <h2 id="success-heading" class="font-bold" style="font-size:24px;">You're on the list.</h2>
+                    <p class="mt-1 leading-relaxed text-white/70" style="font-size:16px;line-height:1.5;">
+                      Welcome to the inner circle. Keep an eye on your inbox for your first Hood King update.
+                    </p>
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
         </div>
       </section>
+
+      <section class="mx-auto max-w-6xl pt-12 sm:pt-16" aria-labelledby="benefits-heading">
+        <div class="mb-6 flex items-end justify-between gap-5">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[0.2em]" style="color:#dc143c;font-size:16px;">
+              Membership has its privileges
+            </p>
+            <h2 id="benefits-heading" class="mt-2 font-bold uppercase tracking-[-0.025em]" style="font-size:24px;">
+              What hits your inbox
+            </h2>
+          </div>
+          <i data-lucide="sparkles" class="hidden text-white sm:block" style="width:26px;height:26px" aria-hidden="true"></i>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <article class="benefit-card border border-white/20 p-5" style="background:#0a0a0a;">
+            <i data-lucide="gem" class="mb-6 text-white" style="width:22px;height:22px" aria-hidden="true"></i>
+            <h3 class="font-bold uppercase tracking-[0.04em]" style="font-size:19px;">Exclusive drops</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/60" style="font-size:16px;">First word on limited releases, special offers, and rare finds.</p>
+          </article>
+
+          <article class="benefit-card border border-white/20 p-5" style="background:#0a0a0a;">
+            <i data-lucide="eye" class="mb-6 text-white" style="width:22px;height:22px" aria-hidden="true"></i>
+            <h3 class="font-bold uppercase tracking-[0.04em]" style="font-size:19px;">Behind the scenes</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/60" style="font-size:16px;">The untold process, people, and energy behind every move.</p>
+          </article>
+
+          <article class="benefit-card border border-white/20 p-5" style="background:#0a0a0a;">
+            <i data-lucide="zap" class="mb-6 text-white" style="width:22px;height:22px" aria-hidden="true"></i>
+            <h3 class="font-bold uppercase tracking-[0.04em]" style="font-size:19px;">Early access</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/60" style="font-size:16px;">Get there before the crowd when something worth having lands.</p>
+          </article>
+
+          <article class="benefit-card border border-white/20 p-5" style="background:#0a0a0a;">
+            <i data-lucide="megaphone" class="mb-6 text-white" style="width:22px;height:22px" aria-hidden="true"></i>
+            <h3 class="font-bold uppercase tracking-[0.04em]" style="font-size:19px;">Member announcements</h3>
+            <p class="mt-2 text-sm leading-relaxed text-white/60" style="font-size:16px;">Private news and community moments, delivered with intention.</p>
+          </article>
+        </div>
+      </section>
     </main>
+
+    <footer class="relative z-10 w-full px-5 pb-8 sm:px-8 lg:px-12">
+      <div class="mx-auto flex max-w-6xl items-center gap-3 border-t border-white/10 pt-5">
+        <span class="h-2 w-2 bg-[#dc143c]" aria-hidden="true"></span>
+        <p class="text-xs font-medium uppercase tracking-[0.14em] text-white/50" style="font-size:16px;color:#999;">
+          Hood King Community — access with intention.
+        </p>
+      </div>
+    </footer>
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       lucide.createIcons();
 
+      // Your working Supabase credentials (keep exactly one copy of each)
       const SUPABASE_URL = "https://mpzzelmlngxjthhpgxwx.supabase.co";
-      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wenplbG1sbmd4anRoaHBneHd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5NDc3OTYsImV4cCI6MjEwMTUyMzc5Nn0.F7GGMgDmfbIH2D_PJpq9z6jPGAPJRpy1-m0vHxKzZLs";
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wenplbG
 
-      const form = document.getElementById("signup-form");
-      const nameInput = document.getElementById("name");
-      const emailInput = document.getElementById("email");
-      const phoneInput = document.getElementById("phone");
-      const interestsInput = document.getElementById("interests");
-      const consentInput = document.getElementById("consent");
-      const button = document.getElementById("join-button");
-      const message = document.getElementById("form-message");
-      const success = document.getElementById("signup-success");
-
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-
-        const name = nameInput.value.trim();
-        const email = emailInput.value.trim();
-        const phone = phoneInput.value.trim() || null;
-        const interests = interestsInput.value || null;
-
-        if (!name) { message.textContent = "Enter your name to join."; nameInput.focus(); return; }
-        if (!email || !emailInput.validity.valid) { message.textContent = "Enter a valid email address."; emailInput.focus(); return; }
-        if (!consentInput.checked) { message.textContent = "Please check the consent box to join."; consentInput.focus(); return; }
-
-        button.disabled = true;
-        button.querySelector(".button-label").textContent = "Saving...";
-        message.textContent = "";
-
-        const consent = "yes";
-
-        const { error } = await supabase
-          .from("FanBase")
-          .insert([{ name, email, phone, interests, consent }]);
-
-        if (error) {
-          console.log("Supabase error:", error);
-          message.textContent = (error.code === "23505")
-            ? "That email is already on the list."
-            : "Your spot wasn't saved. Please try again.";
-
-          button.disabled = false;
-          button.querySelector(".button-label").textContent = "Join now";
-          return;
-        }
-
-        form.classList.add("hidden");
-        success.classList.remove("hidden");
-
-        // Redirect after success (edit this URL to whatever you want)
-        setTimeout(() => {
-          window.location.href = "https://hoodkingent-beep.github.io/Hood-King-s-Fanbase/thank-you.html";
-        }, 1200);
-      });
-    });
-  </script>
-</body>
-</html>
