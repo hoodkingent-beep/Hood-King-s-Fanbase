@@ -16,7 +16,7 @@
     * { box-sizing: border-box; }
     body { margin: 0; font-family: "Raleway", sans-serif; background:#000; }
     .app-shell { width: 100%; min-height: 100vh; position: relative; overflow: hidden; background: #000; color:#fff; }
-    .gold-line { background: linear-gradient (90deg, transparent, #ffffff, transparent); height: 1px; }
+    .gold-line { background: linear-gradient(90deg, transparent, #ffffff, transparent); height: 1px; }
     input:focus { outline: 2px solid #dc143c; outline-offset: 2px; }
   </style>
 </head>
@@ -25,7 +25,8 @@
   <div class="app-shell">
     <main class="w-full px-5 pb-10 pt-10 sm:px-8 lg:px-12">
       <section class="mx-auto max-w-2xl overflow-hidden border border-white/10 bg-[#000000] p-8 shadow-2xl shadow-black/40">
-        <img src="Clean%20logo%20edges.png" alt="Hood King Entertainment logo" class="mx-auto w-48 h-auto">
+        <img src="logo.png" alt="Hood King Entertainment logo" class="mx-auto w-48 h-auto">
+
         <p class="mb-3 text-xs font-bold uppercase tracking-[0.23em]" style="color:#dc143c;">The inner circle</p>
         <h1 class="text-4xl font-extrabold uppercase leading-[.93] tracking-[-0.045em]">Hood King Community</h1>
         <div class="gold-line my-6 w-24"></div>
@@ -76,9 +77,8 @@
       lucide.createIcons();
 
       const SUPABASE_URL = "https://mpzzelmlngxjthhpgxwx.supabase.co";
-      const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wenplbG1sbmd4anRoaHBneHd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5NDc3OTYsImV4cCI6MjEwMTUyMzc5Nn0.F7GGMgDmfbIH2D_PJpq9z6jPGAPJRpy1-m0vHxKzZLs";
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 
       const form = document.getElementById("signup-form");
       const nameInput = document.getElementById("name");
@@ -87,20 +87,20 @@
       const message = document.getElementById("form-message");
       const success = document.getElementById("signup-success");
 
-      // Guard: if any element is missing, show a clear message
-      if (!form || !nameInput || !emailInput || !button || !message || !success)const missing = [];
-if (!form) missing.push("signup-form");
-if (!nameInput) missing.push("name");
-if (!emailInput) missing.push("email");
-if (!button) missing.push("join-button");
-if (!message) missing.push("form-message");
-if (!success) missing.push("signup-success");
+      // Guard: show exactly which element(s) are missing
+      const missing = [];
+      if (!form) missing.push("signup-form");
+      if (!nameInput) missing.push("name");
+      if (!emailInput) missing.push("email");
+      if (!button) missing.push("join-button");
+      if (!message) missing.push("form-message");
+      if (!success) missing.push("signup-success");
 
-if (missing.length) {
-  console.error("Missing element IDs:", missing.join(", "));
-  if (message) message.textContent = "Setup error: missing " + missing.join(", ");
-  return;
-}
+      if (missing.length) {
+        console.error("Missing element IDs:", missing.join(", "));
+        message.textContent = "Setup error: missing " + missing.join(", ");
+        return;
+      }
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -116,25 +116,18 @@ if (missing.length) {
         message.textContent = "";
 
         const { data, error } = await supabase
-        .from("FanBase")
-        .insert([{ name, email }])
-        .select();
-      
-      if (error) {
-        console.log("Supabase error:", error);
-        message.textContent = `Error: ${error.message} (code: ${error.code || "n/a"})`;
-        button.disabled = false;
-        button.querySelector(".button-label").textContent = "Join now";
-        return;
-      }
-      
-      message.textContent = "Saved!";
-      console.log("Inserted row:", data);
+          .from("FanBase")
+          .insert([{ name, email }])
+          .select();
 
+        console.log("INSERT RESULT:", { data, error });
 
-        // Optional: clear inputs
-        nameInput.value = "";
-        emailInput.value = "";
+        if (error) {
+          message.textContent = `Error: ${error.message} (code: ${error.code || "n/a"})`;
+          button.disabled = false;
+          button.querySelector(".button-label").textContent = "Join now";
+          return;
+        }
 
         form.classList.add("hidden");
         success.classList.remove("hidden");
