@@ -115,9 +115,11 @@ if (missing.length) {
         button.querySelector(".button-label").textContent = "Saving...";
         message.textContent = "";
 
-        const { error } = await supabase
-          .from("FanBase")
-          .insert([{ name, email }]);
+        const { data, error } = await supabase
+        .from("FanBase")
+        .insert([{ name, email }]);
+
+console.log({ data, error });
 
         if (error) {
           console.error("Supabase insert error:", error);
