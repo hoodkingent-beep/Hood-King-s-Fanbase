@@ -55,6 +55,11 @@
               </button>
             </div>
 
+            <label class="flex items-start gap-3 text-sm text-white/70">
+              <input id="consent" name="consent" type="checkbox" required class="mt-1">
+              <span>I agree to receive updates from Hood King Entertainment.</span>
+            </label>
+
             <p id="form-message" class="min-h-[20px] text-sm" aria-live="polite"></p>
           </form>
 
@@ -83,6 +88,7 @@
       const form = document.getElementById("signup-form");
       const nameInput = document.getElementById("name");
       const emailInput = document.getElementById("email");
+      const consentInput = document.getElementById("consent");
       const button = document.getElementById("join-button");
       const message = document.getElementById("form-message");
       const success = document.getElementById("signup-success");
@@ -91,6 +97,7 @@
       if (!form) missing.push("signup-form");
       if (!nameInput) missing.push("name");
       if (!emailInput) missing.push("email");
+      if (!consentInput) missing.push("consent");
       if (!button) missing.push("join-button");
       if (!message) missing.push("form-message");
       if (!success) missing.push("signup-success");
@@ -109,23 +116,23 @@
 
         if (!name) { message.textContent = "Enter your name to join."; nameInput.focus(); return; }
         if (!email || !emailInput.validity.valid) { message.textContent = "Enter a valid email address."; emailInput.focus(); return; }
+        if (!consentInput.checked) { message.textContent = "Please check the consent box to join."; consentInput.focus(); return; }
 
         button.disabled = true;
         button.querySelector(".button-label").textContent = "Saving...";
         message.textContent = "";
 
+        const consent = "yes";
+
         const { error } = await supabase
           .from("FanBase")
-          .insert([{ name, email }]);
+          .insert([{ name, email, consent }]);
 
         if (error) {
           console.log("Supabase error:", error);
 
-          // Duplicate email (unique constraint)
           if (error.code === "23505") {
             message.textContent = "That email is already on the list.";
-          } else if (error.code === "42501") {
-            message.textContent = "Database security blocked the signup (RLS). Re-check your insert policy.";
           } else {
             message.textContent = "Your spot wasn't saved. Please try again.";
           }
