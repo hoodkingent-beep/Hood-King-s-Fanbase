@@ -118,21 +118,15 @@ if (missing.length) {
         const { data, error } = await supabase
         .from("FanBase")
         .insert([{ name, email }]);
-
-console.log({ data, error });
-
-        if (error) {
-          console.error("Supabase insert error:", error);
-          message.textContent =
-            error.code === "23505"
-              ? "That email is already on the list."
-              : (error.message || "Your spot wasn't saved. Please try again.");
-
-          button.disabled = false;
-          button.querySelector(".button-label").textContent = "Join now";
-          return;
-        }
-
+      
+      console.log("INSERT RESULT:", { data, error });
+      
+      if (error) {
+        message.textContent = error.message || "Your spot wasn't saved. Please try again.";
+        button.disabled = false;
+        button.querySelector(".button-label").textContent = "Join now";
+        return;
+      }
         // Optional: clear inputs
         nameInput.value = "";
         emailInput.value = "";
