@@ -73,65 +73,72 @@
   </div>
 
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    lucide.createIcons();
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
 
-    const SUPABASE_URL = "https://mpzzelmlngxjthhpgxwx.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wenplbG1sbmd4anRoaHBneHd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5NDc3OTYsImV4cCI6MjEwMTUyMzc5Nn0.F7GGMgDmfbIH2D_PJpq9z6jPGAPJRpy1-m0vHxKzZLs";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const SUPABASE_URL = "https://mpzzelmlngxjthhpgxwx.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wenplbG1sbmd4anRoaHBneHd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5NDc3OTYsImV4cCI6MjEwMTUyMzc5Nn0.F7GGMgDmfbIH2D_PJpq9z6jPGAPJRpy1-m0vHxKzZLs";
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const form = document.getElementById("signup-form");
-    const nameInput = document.getElementById("name");
-    const emailInput = document.getElementById("email");
-    const button = document.getElementById("join-button");
-    const message = document.getElementById("form-message");
-    const success = document.getElementById("signup-success");
+      const form = document.getElementById("signup-form");
+      const nameInput = document.getElementById("name");
+      const emailInput = document.getElementById("email");
+      const button = document.getElementById("join-button");
+      const message = document.getElementById("form-message");
+      const success = document.getElementById("signup-success");
 
-    const missing = [];
-    if (!form) missing.push("signup-form");
-    if (!nameInput) missing.push("name");
-    if (!emailInput) missing.push("email");
-    if (!button) missing.push("join-button");
-    if (!message) missing.push("form-message");
-    if (!success) missing.push("signup-success");
+      const missing = [];
+      if (!form) missing.push("signup-form");
+      if (!nameInput) missing.push("name");
+      if (!emailInput) missing.push("email");
+      if (!button) missing.push("join-button");
+      if (!message) missing.push("form-message");
+      if (!success) missing.push("signup-success");
 
-    if (missing.length) {
-      console.error("Missing element IDs:", missing.join(", "));
-      if (message) message.textContent = "Setup error: missing " + missing.join(", ");
-      return;
-    }
-
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-
-      const name = nameInput.value.trim();
-      const email = emailInput.value.trim();
-
-      if (!name) { message.textContent = "Enter your name to join."; nameInput.focus(); return; }
-      if (!email || !emailInput.validity.valid) { message.textContent = "Enter a valid email address."; emailInput.focus(); return; }
-
-      button.disabled = true;
-      button.querySelector(".button-label").textContent = "Saving...";
-      message.textContent = "";
-
-      const { data, error } = await supabase
-        .from("FanBase")
-        .insert([{ name, email }])
-        .select();
-
-      console.log("INSERT RESULT:", { data, error });
-
-      if (error) {
-        message.textContent = `Error: ${error.message} (code: ${error.code || "n/a"})`;
-        button.disabled = false;
-        button.querySelector(".button-label").textContent = "Join now";
+      if (missing.length) {
+        console.error("Missing element IDs:", missing.join(", "));
+        if (message) message.textContent = "Setup error: missing " + missing.join(", ");
         return;
       }
 
-      form.classList.add("hidden");
-      success.classList.remove("hidden");
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+
+        if (!name) { message.textContent = "Enter your name to join."; nameInput.focus(); return; }
+        if (!email || !emailInput.validity.valid) { message.textContent = "Enter a valid email address."; emailInput.focus(); return; }
+
+        button.disabled = true;
+        button.querySelector(".button-label").textContent = "Saving...";
+        message.textContent = "";
+
+        const { error } = await supabase
+          .from("FanBase")
+          .insert([{ name, email }]);
+
+        if (error) {
+          console.log("Supabase error:", error);
+
+          // Duplicate email (unique constraint)
+          if (error.code === "23505") {
+            message.textContent = "That email is already on the list.";
+          } else if (error.code === "42501") {
+            message.textContent = "Database security blocked the signup (RLS). Re-check your insert policy.";
+          } else {
+            message.textContent = "Your spot wasn't saved. Please try again.";
+          }
+
+          button.disabled = false;
+          button.querySelector(".button-label").textContent = "Join now";
+          return;
+        }
+
+        form.classList.add("hidden");
+        success.classList.remove("hidden");
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>
