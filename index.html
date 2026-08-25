@@ -10,12 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Favicons -->
-  <link rel="icon" href="favicon.ico">
   <link rel="icon" type="image/png" href="browser.png">
-  <link rel="icon" type="browser.png" sizes="32x32" href="favicon-32.png">
-  <link rel="icon" type="browser.png" sizes="192x192" href="favicon-192.png">
 
   <style>
     :root { --red: #dc143c; --ink: #000000; --panel: #0a0a0a; }
@@ -23,7 +18,7 @@
     body { margin: 0; font-family: "Raleway", sans-serif; background:#000; }
     .app-shell { width: 100%; min-height: 100vh; position: relative; overflow: hidden; background: #000; color:#fff; }
     .gold-line { background: linear-gradient(90deg, transparent, #ffffff, transparent); height: 1px; }
-    input:focus { outline: 2px solid #dc143c; outline-offset: 2px; }
+    input:focus, select:focus { outline: 2px solid #dc143c; outline-offset: 2px; }
   </style>
 </head>
 
@@ -48,23 +43,38 @@
               placeholder="Your name" style="background:#0f0f0f;">
 
             <label class="block text-xs font-bold uppercase tracking-[0.15em]" for="email">Your email address</label>
-            <div class="flex flex-col gap-3 sm:flex-row">
-              <input id="email" name="email" type="email" autocomplete="email" required
-                class="min-w-0 flex-1 border border-white/30 bg-black/50 px-4 py-4 text-sm text-white placeholder:text-white/40"
-                placeholder="name@email.com" style="background:#0f0f0f;">
+            <input id="email" name="email" type="email" autocomplete="email" required
+              class="min-w-0 w-full border border-white/30 bg-black/50 px-4 py-4 text-sm text-white placeholder:text-white/40"
+              placeholder="name@email.com" style="background:#0f0f0f;">
 
-              <button id="join-button"
-                class="inline-flex min-h-[52px] items-center justify-center gap-2 px-6 py-3 text-sm font-extrabold uppercase tracking-[0.12em] transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60"
-                type="submit" style="background:#dc143c; color:#000;">
-                <span class="button-label">Join now</span>
-                <i data-lucide="arrow-up-right" aria-label="Submit" style="width:17px;height:17px"></i>
-              </button>
-            </div>
+            <label class="block text-xs font-bold uppercase tracking-[0.15em]" for="phone">Phone (optional)</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel"
+              class="min-w-0 w-full border border-white/30 bg-black/50 px-4 py-4 text-sm text-white placeholder:text-white/40"
+              placeholder="(614) 555-1234" style="background:#0f0f0f;">
+
+            <label class="block text-xs font-bold uppercase tracking-[0.15em]" for="interests">What are you here for?</label>
+            <select id="interests" name="interests"
+              class="min-w-0 w-full border border-white/30 bg-black/50 px-4 py-4 text-sm text-white"
+              style="background:#0f0f0f;">
+              <option value="" selected>Choose one (optional)</option>
+              <option value="music-drops">Music drops</option>
+              <option value="events-shows">Events & shows</option>
+              <option value="merch">Merch</option>
+              <option value="behind-the-scenes">Behind the scenes</option>
+              <option value="artist-updates">Artist updates</option>
+            </select>
 
             <label class="flex items-start gap-3 text-sm text-white/70">
               <input id="consent" name="consent" type="checkbox" required class="mt-1">
               <span>I agree to receive updates from Hood King Entertainment.</span>
             </label>
+
+            <button id="join-button"
+              class="inline-flex w-full min-h-[52px] items-center justify-center gap-2 px-6 py-3 text-sm font-extrabold uppercase tracking-[0.12em] transition hover:brightness-110 disabled:cursor-wait disabled:opacity-60"
+              type="submit" style="background:#dc143c; color:#000;">
+              <span class="button-label">Join now</span>
+              <i data-lucide="arrow-up-right" aria-label="Submit" style="width:17px;height:17px"></i>
+            </button>
 
             <p id="form-message" class="min-h-[20px] text-sm" aria-live="polite"></p>
           </form>
@@ -74,7 +84,7 @@
               <i data-lucide="badge-check" aria-label="Success" class="mt-0.5 shrink-0 text-white" style="width:22px;height:22px"></i>
               <div>
                 <h2 class="font-bold text-xl">You're on the list.</h2>
-                <p class="mt-1 leading-relaxed text-white/70">Welcome to the inner circle.</p>
+                <p class="mt-1 leading-relaxed text-white/70">Welcome to the inner circle. Redirecting…</p>
               </div>
             </div>
           </div>
@@ -94,31 +104,20 @@
       const form = document.getElementById("signup-form");
       const nameInput = document.getElementById("name");
       const emailInput = document.getElementById("email");
+      const phoneInput = document.getElementById("phone");
+      const interestsInput = document.getElementById("interests");
       const consentInput = document.getElementById("consent");
       const button = document.getElementById("join-button");
       const message = document.getElementById("form-message");
       const success = document.getElementById("signup-success");
-
-      const missing = [];
-      if (!form) missing.push("signup-form");
-      if (!nameInput) missing.push("name");
-      if (!emailInput) missing.push("email");
-      if (!consentInput) missing.push("consent");
-      if (!button) missing.push("join-button");
-      if (!message) missing.push("form-message");
-      if (!success) missing.push("signup-success");
-
-      if (missing.length) {
-        console.error("Missing element IDs:", missing.join(", "));
-        if (message) message.textContent = "Setup error: missing " + missing.join(", ");
-        return;
-      }
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const name = nameInput.value.trim();
         const email = emailInput.value.trim();
+        const phone = phoneInput.value.trim() || null;
+        const interests = interestsInput.value || null;
 
         if (!name) { message.textContent = "Enter your name to join."; nameInput.focus(); return; }
         if (!email || !emailInput.validity.valid) { message.textContent = "Enter a valid email address."; emailInput.focus(); return; }
@@ -132,16 +131,13 @@
 
         const { error } = await supabase
           .from("FanBase")
-          .insert([{ name, email, consent }]);
+          .insert([{ name, email, phone, interests, consent }]);
 
         if (error) {
           console.log("Supabase error:", error);
-
-          if (error.code === "23505") {
-            message.textContent = "That email is already on the list.";
-          } else {
-            message.textContent = "Your spot wasn't saved. Please try again.";
-          }
+          message.textContent = (error.code === "23505")
+            ? "That email is already on the list."
+            : "Your spot wasn't saved. Please try again.";
 
           button.disabled = false;
           button.querySelector(".button-label").textContent = "Join now";
@@ -150,9 +146,13 @@
 
         form.classList.add("hidden");
         success.classList.remove("hidden");
+
+        // Redirect after success (edit this URL to whatever you want)
+        setTimeout(() => {
+          window.location.href = "https://hoodkingent-beep.github.io/Hood-King-s-Fanbase/thank-you.html";
+        }, 1200);
       });
     });
   </script>
 </body>
 </html>
-
