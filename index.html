@@ -112,7 +112,7 @@
 
     .form-status {
       min-height: 22px;
-      margin: 0;
+      margin:  0;
       font-family: "DM Sans", sans-serif;
     }
 
@@ -120,7 +120,6 @@
     .status-loading { color: #d6d6d6; }
   </style>
 </head>
-</script>
 
 <body style="background:#000;">
   <div class="app-shell text-white">
@@ -128,7 +127,7 @@
       <nav class="mx-auto flex max-w-6xl items-center justify-between border-b border-white/10 pb-4" aria-label="Main navigation">
         <a href="#join" class="flex items-center gap-2.5 no-underline">
           <span class="flex h-9 w-9 items-center justify-center border border-white/40 text-white" aria-hidden="true">
-          <i data-lucide="crown" style="width:18px;height:18px"></i>
+            <i data-lucide="crown" style="width:18px;height:18px"></i>
           </span>
           <span class="text-sm font-extrabold uppercase tracking-[0.18em]" style="color:#fff;font-weight:800;font-size:16px;">Hood King</span>
         </a>
@@ -142,9 +141,7 @@
         <div class="grid min-h-[560px] lg:grid-cols-[1.05fr_.95fr]">
           <div class="relative order-2 min-h-[310px] lg:order-1 lg:min-h-full">
             <div class="hero-image-wrap absolute inset-0">
-              <!-- Replace hero.png with your real file in the repo -->
-              <img class="h-full w-full object-cover" loading="lazy" src="hero.png"
-                   alt="Hood King Entertainment hero image">
+              <img class="h-full w-full object-cover" loading="lazy" src="hero.png" alt="Hood King Entertainment hero image">
             </div>
             <div class="absolute bottom-0 left-0 right-0 z-10 p-6 sm:p-8 lg:p-10">
               <div class="accent-line mb-4 w-20"></div>
@@ -292,11 +289,51 @@
       </div>
     </footer>
   </div>
-  
-<script>
+
+  <script>
     document.addEventListener("DOMContentLoaded", () => {
       lucide.createIcons();
 
-      // Your working Supabase credentials (keep exactly one copy of each)
       const SUPABASE_URL = "https://mpzzelmlngxjthhpgxwx.supabase.co";
-      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1wenplbG
+      const SUPABASE_ANON_KEY = "PASTE_YOUR_FULL_ANON_KEY_HERE";
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const form = document.getElementById("signup-form");
+      const nameInput = document.getElementById("name");
+      const emailInput = document.getElementById("email");
+      const phoneInput = document.getElementById("phone");
+      const interestsInput = document.getElementById("interests");
+      const consentInput = document.getElementById("consent");
+
+      const button = document.getElementById("join-button");
+      const defaultLabel = document.getElementById("join-default-label");
+      const loadingLabel = document.getElementById("join-loading-label");
+      const joinIcon = document.getElementById("join-icon");
+
+      const message = document.getElementById("form-message");
+      const successPanel = document.getElementById("signup-success");
+
+      function showMessage(text, type) {
+        message.textContent = text;
+        message.className = "form-status " + (type === "error" ? "status-error" : "status-loading");
+      }
+
+      function clearMessage() {
+        message.textContent = "";
+        message.className = "form-status";
+      }
+
+      function setLoading(isLoading) {
+        button.disabled = isLoading;
+        defaultLabel.classList.toggle("hidden", isLoading);
+        loadingLabel.classList.toggle("hidden", !isLoading);
+        joinIcon.classList.toggle("hidden", isLoading);
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        clearMessage();
+
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const phone = phoneInput.value.trim() ||
